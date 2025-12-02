@@ -9,7 +9,8 @@
     "notifications"
   ],
   "action": {
-    "default_title": "计时器"
+    "default_title": "计时器",
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js",
