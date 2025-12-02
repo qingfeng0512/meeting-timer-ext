@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计时器</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>计时器</h1>
+
+        <div class="timer-display">
+            <div class="time" id="timeDisplay">00:00</div>
+            <div class="status" id="statusDisplay">准备就绪</div>
+        </div>
+
+        <div class="controls">
+            <button class="timer-btn" data-minutes="1">1分钟</button>
+            <button class="timer-btn" data-minutes="2">2分钟</button>
+            <button class="timer-btn" data-minutes="3">3分钟</button>
+        </div>
+
+        <div class="action-buttons">
+            <button id="startBtn" class="action-btn start">开始</button>
+            <button id="pauseBtn" class="action-btn pause">暂停</button>
+            <button id="resetBtn" class="action-btn reset">重置</button>
+        </div>
+
+        <div class="preset-times">
+            <h3>快速设置</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-seconds="10">10秒</button>
+                <button class="preset-btn" data-seconds="20">20秒</button>
+                <button class="preset-btn" data-seconds="30">30秒</button>
+                <button class="preset-btn" data-seconds="60">1分钟</button>
+                <button class="preset-btn" data-seconds="120">2分钟</button>
+                <button class="preset-btn" data-seconds="180">3分钟</button>
+                <button class="preset-btn" data-seconds="300">5分钟</button>
+                <button class="preset-btn" data-seconds="600">10分钟</button>
+                <button class="preset-btn" data-seconds="1800">30分钟</button>
+            </div>
+        </div>
+
+        <div class="custom-time">
+            <h3>自定义时间</h3>
+            <div class="custom-input-group">
+                <input type="text" id="customTimeInput" placeholder="例: 30s, 1m, 90" autocomplete="off">
+                <button id="setCustomTimeBtn" class="custom-btn">设置</button>
+            </div>
+            <div class="input-tips">
+                <small>支持格式: 30s (秒), 1m (分钟), 90 (默认秒)</small>
+            </div>
+        </div>
+
+        <div class="footer">
+            <small>@世界那么哒</small>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

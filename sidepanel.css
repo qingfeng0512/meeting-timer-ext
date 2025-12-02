@@ -1,0 +1,389 @@
+/* 侧边栏样式 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.sidepanel-container {
+    width: 320px;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2d3748;
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #49bccf;
+    animation: pulse 2s infinite;
+}
+
+.status-dot.running {
+    background: #6ad9e5;
+}
+
+.status-dot.warning {
+    background: #ed8936;
+    animation: pulse 1s infinite;
+}
+
+.status-dot.finished {
+    background: #f56565;
+    animation: pulse 0.5s infinite;
+}
+
+.status-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+/* 倒计时显示 */
+.timer-display {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.time {
+    font-size: 48px;
+    font-weight: 700;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    color: #2d3748;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #49bccf 0%, #3aa0b5 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.timer-display.warning .progress-fill {
+    background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
+}
+
+.timer-display.critical .progress-fill {
+    background: linear-gradient(90deg, #f56565 0%, #e53e3e 100%);
+}
+
+/* 快速控制 */
+.quick-controls {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.quick-controls h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.quick-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.quick-btn {
+    padding: 12px 8px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: rgba(73, 188, 207, 0.1);
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.quick-btn:hover {
+    background: rgba(73, 188, 207, 0.2);
+    transform: translateY(-2px);
+}
+
+.quick-btn.active {
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    color: white;
+    border-color: #49bccf;
+}
+
+.quick-btn .btn-icon {
+    font-size: 18px;
+}
+
+.quick-btn .btn-text {
+    font-size: 10px;
+}
+
+/* 主要控制按钮 */
+.main-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.control-btn {
+    padding: 15px 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control-btn.primary {
+    background: linear-gradient(135deg, #49bccf 0%, #3aa0b5 100%);
+    color: white;
+}
+
+.control-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(73, 188, 207, 0.3);
+}
+
+.control-btn.secondary {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+}
+
+.control-btn.secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(237, 137, 54, 0.3);
+}
+
+.control-btn.tertiary {
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    color: white;
+}
+
+.control-btn.tertiary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(106, 217, 229, 0.3);
+}
+
+.control-btn .btn-icon {
+    font-size: 16px;
+}
+
+.control-btn .btn-text {
+    font-size: 10px;
+}
+
+/* 自定义时间 */
+.custom-time {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.custom-time h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.custom-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.custom-input-group input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.custom-input-group input:focus {
+    outline: none;
+    border-color: #49bccf;
+}
+
+.custom-input-group input.error {
+    border-color: #f56565;
+}
+
+.custom-input-group input.success {
+    border-color: #49bccf;
+}
+
+.custom-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.custom-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(106, 217, 229, 0.3);
+}
+
+.input-tips {
+    font-size: 11px;
+    color: #718096;
+    text-align: center;
+}
+
+/* 统计信息 */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 10px;
+    background: rgba(73, 188, 207, 0.05);
+    border-radius: 8px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #718096;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2d3748;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+}
+
+/* 动画 */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+}
+
+/* 注脚样式 */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.footer small {
+    color: #718096;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 响应式调整 */
+@media (max-width: 350px) {
+    .sidepanel-container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .time {
+        font-size: 36px;
+    }
+
+    .quick-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .main-controls {
+        grid-template-columns: 1fr;
+    }
+}

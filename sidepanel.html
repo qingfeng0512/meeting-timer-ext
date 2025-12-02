@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计时器</title>
+    <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+    <div class="sidepanel-container">
+        <div class="header">
+            <h1>计时器</h1>
+            <div class="status-indicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span class="status-text" id="statusText">准备就绪</span>
+            </div>
+        </div>
+
+        <div class="timer-display">
+            <div class="time" id="timeDisplay">00:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="quick-controls">
+            <h3>快速设置</h3>
+            <div class="quick-buttons">
+                <button class="quick-btn" data-seconds="10">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">10秒</span>
+                </button>
+                <button class="quick-btn" data-seconds="20">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">20秒</span>
+                </button>
+                <button class="quick-btn" data-seconds="30">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">30秒</span>
+                </button>
+                <button class="quick-btn" data-minutes="1">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">1分钟</span>
+                </button>
+                <button class="quick-btn" data-minutes="2">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">2分钟</span>
+                </button>
+                <button class="quick-btn" data-minutes="3">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">3分钟</span>
+                </button>
+                <button class="quick-btn" data-minutes="5">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">5分钟</span>
+                </button>
+                <button class="quick-btn" data-minutes="10">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">10分钟</span>
+                </button>
+                <button class="quick-btn" data-minutes="30">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">30分钟</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-controls">
+            <button id="startBtn" class="control-btn primary">
+                <span class="btn-icon">▶️</span>
+                <span class="btn-text">开始</span>
+            </button>
+            <button id="pauseBtn" class="control-btn secondary" disabled>
+                <span class="btn-icon">⏸️</span>
+                <span class="btn-text">暂停</span>
+            </button>
+            <button id="resetBtn" class="control-btn tertiary">
+                <span class="btn-icon">🔄</span>
+                <span class="btn-text">重置</span>
+            </button>
+        </div>
+
+        <div class="custom-time">
+            <h3>自定义时间</h3>
+            <div class="custom-input-group">
+                <input type="text" id="customTimeInput" placeholder="例: 30s, 1m, 90" autocomplete="off">
+                <button id="setCustomTimeBtn" class="custom-btn">设置</button>
+            </div>
+            <div class="input-tips">
+                <small>支持格式: 30s (秒), 1m (分钟), 90 (默认秒)</small>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">总时长:</span>
+                <span class="stat-value" id="totalTimeDisplay">00:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">进度:</span>
+                <span class="stat-value" id="progressPercent">0%</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <small>@世界那么哒</small>
+        </div>
+    </div>
+
+    <script src="sidepanel.js"></script>
+</body>
+</html>

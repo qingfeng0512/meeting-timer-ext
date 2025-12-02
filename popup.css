@@ -1,0 +1,279 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 350px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #6ad9e5 0%, #49bccf 100%);
+    color: #333;
+}
+
+.container {
+    padding: 20px;
+    min-height: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.timer-display {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.time {
+    font-size: 48px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+.status {
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.timer-btn {
+    flex: 1;
+    padding: 12px 8px;
+    background: #49bccf;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.timer-btn:hover {
+    background: #3aa0b5;
+    transform: translateY(-2px);
+}
+
+.timer-btn.active {
+    background: #2a8d9e;
+    box-shadow: 0 4px 15px rgba(73, 188, 207, 0.4);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.start {
+    background: #49bccf;
+    color: white;
+}
+
+.start:hover {
+    background: #3aa0b5;
+    transform: translateY(-2px);
+}
+
+.pause {
+    background: #f39c12;
+    color: white;
+}
+
+.pause:hover {
+    background: #e67e22;
+    transform: translateY(-2px);
+}
+
+.reset {
+    background: #95a5a6;
+    color: white;
+}
+
+.reset:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.preset-times {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.preset-times h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.preset-btn {
+    padding: 8px 6px;
+    background: #49bccf;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.preset-btn:hover {
+    background: #3aa0b5;
+    transform: translateY(-1px);
+}
+
+.custom-time {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.custom-time h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.custom-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+#customTimeInput {
+    flex: 1;
+    padding: 8px 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    transition: border-color 0.3s ease;
+}
+
+#customTimeInput:focus {
+    outline: none;
+    border-color: #49bccf;
+    box-shadow: 0 0 0 3px rgba(73, 188, 207, 0.1);
+}
+
+.custom-btn {
+    padding: 8px 16px;
+    background: #49bccf;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.custom-btn:hover {
+    background: #3aa0b5;
+    transform: translateY(-1px);
+}
+
+.input-tips {
+    color: #7f8c8d;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.input-tips small {
+    opacity: 0.8;
+}
+
+/* 输入错误状态 */
+#customTimeInput.error {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* 成功状态 */
+#customTimeInput.success {
+    border-color: #49bccf;
+    box-shadow: 0 0 0 3px rgba(73, 188, 207, 0.1);
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.timer-display.running .time {
+    animation: pulse 1s infinite;
+    color: #e74c3c;
+}
+
+.timer-display.warning .time {
+    color: #f39c12;
+    animation: pulse 0.5s infinite;
+}
+
+.timer-display.finished .time {
+    color: #e74c3c;
+    font-size: 56px;
+}
+
+/* 注脚样式 */
+.footer {
+    text-align: center;
+    margin-top: 15px;
+    padding: 8px;
+    opacity: 0.6;
+}
+
+.footer small {
+    color: white;
+    font-size: 11px;
+    font-weight: 400;
+}
