@@ -24,6 +24,11 @@ class ContentScriptManager {
                     console.log('Content处理timerTick:', this.formatTime(request.timeLeft));
                     this.updateTimerOverlay(request.timeLeft);
                     break;
+                case 'timerWarning':
+                    console.log('Content处理timerWarning，剩余10秒');
+                    // 播放警告音效
+                    this.playWarningSound();
+                    break;
                 case 'timerPaused':
                     console.log('Content处理timerPaused');
                     this.hideTimerOverlay();
@@ -287,36 +292,63 @@ class ContentScriptManager {
         this.playDoneAudio();
     }
 
-    // 激活语音合成功能
-    activateVoice() {
-        if ('speechSynthesis' in window) {
-            try {
-                // 创建一个极短的静音来激活语音权限
-                const utterance = new SpeechSynthesisUtterance('');
-                utterance.volume = 0;
-                speechSynthesis.speak(utterance);
-                console.log('Content: 语音权限已激活');
-            } catch (e) {
-                console.log('Content: 语音激活失败:', e);
-            }
+    // 播放完成音频
+    playDoneAudio() {
+        // 使用Audio API播放done.mp3音频文件
+        try {
+            // 从扩展中获取音频文件URL
+            const audioUrl = chrome.runtime.getURL('sounds/done.mp3');
+            const audio = new Audio(audioUrl);
+            audio.volume = 1.0; // 最大音量
+
+            audio.play().then(() => {
+                console.log('Content: 音频播放成功');
+            }).catch(error => {
+                console.log('Content: 音频播放失败:', error);
+            });
+
+            // 音频播放结束后，播放语音播报
+            audio.onended = () => {
+                console.log('Content: 音频播放完毕，播放语音播报');
+                this.playSpeech();
+            };
+        } catch (e) {
+            console.log('Content: 音频播放异常:', e);
         }
     }
 
-    // 播放完成音频
-    playDoneAudio() {
-        // 使用语音合成API朗读"倒计时结束"
+    // 播放警告音效（剩余10秒时）
+    playWarningSound() {
+        try {
+            // 从扩展中获取音频文件URL
+            const audioUrl = chrome.runtime.getURL('sounds/done.mp3');
+            const audio = new Audio(audioUrl);
+            audio.volume = 1.0; // 最大音量
+
+            audio.play().then(() => {
+                console.log('Content: 警告音效播放成功');
+            }).catch(error => {
+                console.log('Content: 警告音效播放失败:', error);
+            });
+        } catch (e) {
+            console.log('Content: 警告音效播放异常:', e);
+        }
+    }
+
+    // 播放语音播报
+    playSpeech() {
         if ('speechSynthesis' in window) {
             try {
-                const utterance = new SpeechSynthesisUtterance('倒计时结束');
+                const utterance = new SpeechSynthesisUtterance('倒计时结束，有请下一位');
                 utterance.lang = 'zh-CN'; // 设置为中文
                 utterance.volume = 1.0; // 最大音量
                 utterance.rate = 0.9; // 语速
                 utterance.pitch = 1.0; // 音调
 
                 speechSynthesis.speak(utterance);
-                console.log('Content: 语音播放成功');
+                console.log('Content: 语音播报成功');
             } catch (e) {
-                console.log('Content: 语音播放失败:', e);
+                console.log('Content: 语音播报失败:', e);
             }
         } else {
             console.log('Content: 浏览器不支持语音合成API');

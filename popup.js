@@ -88,6 +88,11 @@ class MeetingTimer {
                         this.updateWarningState();
                     }
                     break;
+                case 'timerWarning':
+                    console.log('Popup处理timerWarning，剩余10秒');
+                    // 播放警告音效
+                    this.playWarningSound();
+                    break;
                 case 'timerPaused':
                     this.updateStatus('已暂停');
                     break;
@@ -99,7 +104,7 @@ class MeetingTimer {
                     this.updateStatus('时间到！');
                     this.timerDisplay.classList.remove('running');
                     this.timerDisplay.classList.add('finished');
-                    // 播放提示音
+                    // 播放提示音和语音播报
                     this.playSound();
                     break;
                 case 'timerStateSync':
@@ -186,8 +191,22 @@ class MeetingTimer {
             return;
         }
 
-        // 激活语音合成（用户交互后首次使用需要激活）
-        this.activateVoice();
+        // 尝试播放音频来激活音频权限（用户交互后可以播放音频）
+        try {
+            const audio = new Audio(chrome.runtime.getURL('sounds/done.mp3'));
+            audio.volume = 0.3; // 较低音量，避免吓一跳
+            audio.play().then(() => {
+                // 立即暂停，只为了激活权限
+                audio.pause();
+                audio.currentTime = 0;
+                console.log('Popup: 音频权限已激活');
+            }).catch(error => {
+                console.log('Popup: 音频激活（用户可能未允许自动播放）');
+                // 不影响倒计时继续进行
+            });
+        } catch (e) {
+            console.log('Popup: 音频激活异常:', e);
+        }
 
         // 通知background.js启动倒计时
         chrome.runtime.sendMessage({
@@ -203,21 +222,6 @@ class MeetingTimer {
         this.timerDisplay.classList.add('running');
         this.updateStatus('倒计时进行中...');
         this.saveTimerState();
-    }
-
-    // 激活语音合成功能
-    activateVoice() {
-        if ('speechSynthesis' in window) {
-            try {
-                // 创建一个极短的静音来激活语音权限
-                const utterance = new SpeechSynthesisUtterance('');
-                utterance.volume = 0;
-                speechSynthesis.speak(utterance);
-                console.log('Popup: 语音权限已激活');
-            } catch (e) {
-                console.log('Popup: 语音激活失败:', e);
-            }
-        }
     }
 
     pauseTimer() {
@@ -290,19 +294,57 @@ class MeetingTimer {
     }
 
     playSound() {
-        // 使用语音合成API朗读"倒计时结束"
+        // 使用Audio API播放done.mp3音频文件
+        try {
+            const audio = new Audio(chrome.runtime.getURL('sounds/done.mp3'));
+            audio.volume = 1.0; // 最大音量
+
+            audio.play().then(() => {
+                console.log('Popup: 音频播放成功');
+            }).catch(error => {
+                console.log('Popup: 音频播放失败:', error);
+            });
+
+            // 音频播放结束后，播放语音播报
+            audio.onended = () => {
+                console.log('Popup: 音频播放完毕，播放语音播报');
+                this.playSpeech();
+            };
+        } catch (e) {
+            console.log('Popup: 音频播放异常:', e);
+        }
+    }
+
+    // 播放警告音效（剩余10秒时）
+    playWarningSound() {
+        try {
+            const audio = new Audio(chrome.runtime.getURL('sounds/done.mp3'));
+            audio.volume = 1.0; // 最大音量
+
+            audio.play().then(() => {
+                console.log('Popup: 警告音效播放成功');
+            }).catch(error => {
+                console.log('Popup: 警告音效播放失败:', error);
+            });
+        } catch (e) {
+            console.log('Popup: 警告音效播放异常:', e);
+        }
+    }
+
+    // 播放语音播报
+    playSpeech() {
         if ('speechSynthesis' in window) {
             try {
-                const utterance = new SpeechSynthesisUtterance('倒计时结束');
+                const utterance = new SpeechSynthesisUtterance('倒计时结束，有请下一位');
                 utterance.lang = 'zh-CN'; // 设置为中文
                 utterance.volume = 1.0; // 最大音量
                 utterance.rate = 0.9; // 语速
                 utterance.pitch = 1.0; // 音调
 
                 speechSynthesis.speak(utterance);
-                console.log('Popup: 语音播放成功');
+                console.log('Popup: 语音播报成功');
             } catch (e) {
-                console.log('Popup: 语音播放失败:', e);
+                console.log('Popup: 语音播报失败:', e);
             }
         } else {
             console.log('Popup: 浏览器不支持语音合成API');

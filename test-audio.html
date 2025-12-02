@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频播放测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .audio-player {
+            margin: 30px 0;
+        }
+
+        audio {
+            width: 100%;
+            outline: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-play:active {
+            transform: translateY(0);
+        }
+
+        .btn-speech {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-speech:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-speech:active {
+            transform: translateY(0);
+        }
+
+        .info {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 音频播放测试</h1>
+
+        <div class="audio-player">
+            <h3 style="color: #666; margin-bottom: 10px;">测试音频文件</h3>
+            <audio id="audioPlayer" controls>
+                <source src="sounds/done.mp3" type="audio/mpeg">
+                您的浏览器不支持音频播放。
+            </audio>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-play" onclick="playAudio()">
+                ▶️ 播放音频
+            </button>
+            <button class="btn-speech" onclick="testSpeech()">
+                🗣️ 测试语音合成
+            </button>
+        </div>
+
+        <div class="info">
+            <h3>📝 测试说明</h3>
+            <p>
+                1. 点击"播放音频"测试done.mp3文件播放<br>
+                2. 点击"测试语音合成"验证语音合成API<br>
+                3. 检查控制台查看详细日志信息<br>
+                4. 观察状态区域显示测试结果
+            </p>
+        </div>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        function showStatus(message, type = 'pending') {
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function playAudio() {
+            console.log('开始播放音频文件...');
+            showStatus('🔄 正在播放音频...', 'pending');
+
+            try {
+                // 重置音频
+                audioPlayer.currentTime = 0;
+
+                // 播放音频
+                const playPromise = audioPlayer.play();
+
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            console.log('✅ 音频播放成功');
+                            showStatus('✅ 音频播放成功！', 'success');
+
+                            // 监听播放结束事件
+                            audioPlayer.onended = () => {
+                                console.log('音频播放结束');
+                                showStatus('✅ 音频播放完成', 'success');
+                            };
+                        })
+                        .catch(error => {
+                            console.error('❌ 音频播放失败:', error);
+                            showStatus(`❌ 播放失败: ${error.message}`, 'error');
+                        });
+                }
+            } catch (error) {
+                console.error('❌ 音频播放异常:', error);
+                showStatus(`❌ 播放异常: ${error.message}`, 'error');
+            }
+        }
+
+        function testSpeech() {
+            console.log('测试语音合成API...');
+            showStatus('🔄 测试语音合成...', 'pending');
+
+            if ('speechSynthesis' in window) {
+                try {
+                    // 创建一个语音合成实例
+                    const utterance = new SpeechSynthesisUtterance('倒计时结束');
+                    utterance.lang = 'zh-CN'; // 设置为中文
+                    utterance.volume = 1.0; // 最大音量
+                    utterance.rate = 0.9; // 语速
+                    utterance.pitch = 1.0; // 音调
+
+                    // 监听播放事件
+                    utterance.onstart = () => {
+                        console.log('语音合成开始');
+                        showStatus('🗣️ 语音合成开始...', 'pending');
+                    };
+
+                    utterance.onend = () => {
+                        console.log('语音合成结束');
+                        showStatus('✅ 语音合成成功！', 'success');
+                    };
+
+                    utterance.onerror = (event) => {
+                        console.error('语音合成错误:', event);
+                        showStatus(`❌ 语音合成失败: ${event.error}`, 'error');
+                    };
+
+                    // 播放语音
+                    speechSynthesis.speak(utterance);
+                    console.log('语音合成请求已发送');
+                } catch (error) {
+                    console.error('❌ 语音合成异常:', error);
+                    showStatus(`❌ 语音合成异常: ${error.message}`, 'error');
+                }
+            } else {
+                console.error('❌ 浏览器不支持语音合成API');
+                showStatus('❌ 浏览器不支持语音合成API', 'error');
+            }
+        }
+
+        // 页面加载完成后的初始化
+        window.addEventListener('load', () => {
+            console.log('页面加载完成');
+            showStatus('✅ 页面加载完成，可以开始测试', 'success');
+
+            // 检查音频文件是否存在
+            audioPlayer.addEventListener('error', (e) => {
+                console.error('音频加载错误:', e);
+                showStatus('❌ 音频文件加载失败，请检查文件路径', 'error');
+            });
+
+            audioPlayer.addEventListener('canplay', () => {
+                console.log('音频文件可以播放');
+            });
+        });
+
+        // 显示浏览器信息
+        console.log('浏览器支持情况:');
+        console.log('- 语音合成:', 'speechSynthesis' in window);
+        console.log('- 音频播放:', 'HTMLAudioElement' in window);
+        console.log('- 用户媒体:', 'navigator' in window);
+    </script>
+</body>
+</html>

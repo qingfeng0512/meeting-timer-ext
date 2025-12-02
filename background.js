@@ -83,6 +83,16 @@ function startTimer(data) {
         chrome.storage.local.set(updateData);
         console.log('Background: 存储更新数据:', updateData); // 调试日志
 
+        // 倒计时剩余10秒时发送警告
+        if (timerState.timeLeft === 10) {
+            console.log('Background: 倒计时剩余10秒，发送警告');
+            chrome.runtime.sendMessage({
+                action: 'timerWarning'
+            }).catch(error => {
+                console.log('警告消息发送失败:', error);
+            });
+        }
+
         if (timerState.timeLeft <= 0) {
             finishTimer();
         }

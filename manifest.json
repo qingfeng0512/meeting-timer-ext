@@ -5,7 +5,8 @@
   "description": "简洁实用的倒计时工具，支持多种时间预设和自定义时间",
   "permissions": [
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "notifications"
   ],
   "action": {
     "default_title": "计时器"
@@ -26,6 +27,12 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["sounds/done.mp3"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
