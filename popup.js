@@ -186,9 +186,14 @@ class MeetingTimer {
     }
 
     startTimer() {
+        // 支持“上一轮时长重新开始”：如果当前剩余时间为0但totalTime>0，则用totalTime重新开始
         if (this.timeLeft <= 0) {
-            this.updateStatus('请先选择倒计时时间');
-            return;
+            if (this.totalTime > 0) {
+                this.timeLeft = this.totalTime;
+            } else {
+                this.updateStatus('请先选择倒计时时间');
+                return;
+            }
         }
 
         // 尝试播放音频来激活音频权限（用户交互后可以播放音频）
@@ -305,7 +310,7 @@ class MeetingTimer {
                 console.log('Popup: 音频播放失败:', error);
             });
 
-            // 音频播放结束后，播放语音播报
+            // 音频播放结束后，播放语音播报（兜底，确保至少有一处能播合成语音）
             audio.onended = () => {
                 console.log('Popup: 音频播放完毕，播放语音播报');
                 this.playSpeech();
@@ -340,9 +345,17 @@ class MeetingTimer {
                 utterance.volume = 1.0; // 最大音量
                 utterance.rate = 0.9; // 语速
                 utterance.pitch = 1.0; // 音调
-
-                speechSynthesis.speak(utterance);
-                console.log('Popup: 语音播报成功');
+                // 通过 storage 做一次性计数：同一轮倒计时只播一次
+                chrome.storage.local.get(['speechPlayed'], (result) => {
+                    if (result.speechPlayed) {
+                        console.log('Popup: 本轮倒计时语音已播过，跳过');
+                        return;
+                    }
+                    chrome.storage.local.set({ speechPlayed: true }, () => {
+                        speechSynthesis.speak(utterance);
+                        console.log('Popup: 语音播报成功');
+                    });
+                });
             } catch (e) {
                 console.log('Popup: 语音播报失败:', e);
             }

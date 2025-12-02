@@ -35,16 +35,32 @@ class ContentScriptManager {
                     break;
                 case 'timerReset':
                     console.log('Content处理timerReset');
-                    // 重置时检查timerState，如果totalTime > 0则重新显示悬浮窗
-                    chrome.storage.local.get(['timerState'], (result) => {
-                        if (result.timerState && result.timerState.totalTime > 0) {
-                            // 有设置时间，重新显示悬浮窗
-                            this.showTimerOverlay(result.timerState.timeLeft);
-                        } else {
-                            // 没有设置时间，隐藏悬浮窗
-                            this.hideTimerOverlay();
+                // 重置时检查timerState：
+                // - 如果有总时长，则用总时长重绘一个“初始状态”的悬浮框
+                // - 否则隐藏悬浮框
+                chrome.storage.local.get(['timerState'], (result) => {
+                    if (result.timerState && result.timerState.totalTime > 0) {
+                        const state = result.timerState;
+                        const resetTime = state.totalTime;
+                        this.showTimerOverlay(resetTime);
+
+                        // 强制把状态文字恢复为初始文案，避免停留在“倒计时结束”
+                        const overlay = document.getElementById('meeting-timer-overlay');
+                        if (overlay) {
+                            const statusElement = overlay.querySelector('.timer-status');
+                            if (statusElement) {
+                                statusElement.textContent = '计时器';
+                            }
+                            const progressElement = overlay.querySelector('.timer-progress');
+                            if (progressElement) {
+                                progressElement.textContent = this.getProgressText(resetTime);
+                            }
                         }
-                    });
+                    } else {
+                        // 没有设置时间，隐藏悬浮窗
+                        this.hideTimerOverlay();
+                    }
+                });
                     break;
                 case 'timerFinished':
                     console.log('Content处理timerFinished');
@@ -306,12 +322,6 @@ class ContentScriptManager {
             }).catch(error => {
                 console.log('Content: 音频播放失败:', error);
             });
-
-            // 音频播放结束后，播放语音播报
-            audio.onended = () => {
-                console.log('Content: 音频播放完毕，播放语音播报');
-                this.playSpeech();
-            };
         } catch (e) {
             console.log('Content: 音频播放异常:', e);
         }
@@ -339,14 +349,21 @@ class ContentScriptManager {
     playSpeech() {
         if ('speechSynthesis' in window) {
             try {
-                const utterance = new SpeechSynthesisUtterance('倒计时结束，有请下一位');
+                const utterance = new SpeechSynthesisUtterance('倒计时结束、有请下一位');
                 utterance.lang = 'zh-CN'; // 设置为中文
                 utterance.volume = 1.0; // 最大音量
                 utterance.rate = 0.9; // 语速
                 utterance.pitch = 1.0; // 音调
-
-                speechSynthesis.speak(utterance);
-                console.log('Content: 语音播报成功');
+                chrome.storage.local.get(['speechPlayed'], (result) => {
+                    if (result.speechPlayed) {
+                        console.log('Content: 本轮倒计时语音已播过，跳过');
+                        return;
+                    }
+                    chrome.storage.local.set({ speechPlayed: true }, () => {
+                        speechSynthesis.speak(utterance);
+                        console.log('Content: 语音播报成功');
+                    });
+                });
             } catch (e) {
                 console.log('Content: 语音播报失败:', e);
             }

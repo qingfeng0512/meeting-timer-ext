@@ -48,6 +48,9 @@ function startTimer(data) {
     timerState.isRunning = true;
     timerState.selectedMinutes = data.selectedMinutes;
 
+    // 新一轮倒计时开始，重置语音播报标记
+    chrome.storage.local.set({ speechPlayed: false });
+
     console.log('Background: 启动倒计时，初始时间:', formatTime(timerState.timeLeft)); // 调试日志
 
     timerState.interval = setInterval(() => {
@@ -147,6 +150,9 @@ function resetTimer() {
     }
 
     saveTimerState();
+
+    // 重置语音播报标记，确保下一次倒计时可以再次播报
+    chrome.storage.local.set({ speechPlayed: false });
 
     // 通知popup
     chrome.runtime.sendMessage({
